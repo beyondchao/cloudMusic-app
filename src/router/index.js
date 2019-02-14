@@ -6,6 +6,8 @@ import Singer from 'cpnts/singer/singer'
 import MusicList from 'cpnts/music-list/music-list'
 import RankDetail from 'cpnts/rank-detail/rank-detail'
 import SingerDetail from 'cpnts/singer-detail/singer-detail'
+import User from 'cpnts/user/user'
+import Search from 'cpnts/search/search'
 
 Vue.use(Router)
 
@@ -42,6 +44,10 @@ export default new Router({
         path: ':id',
         component: SingerDetail
       }]
+    },
+    {
+      path: '/user',
+      component: User
     }
   ]
 })
