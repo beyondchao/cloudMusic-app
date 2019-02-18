@@ -2,9 +2,6 @@
 
 :musical_keyboard: 基于 Vue(2.5) + vuex + vue-router + vue-axios +better-scroll + Scss + ES6 等开发一款移动端音乐 WebApp，UI 界面参考了安卓版的网易云音乐、flex 布局适配常见移动端。
 
-:yum: 项目演示地址：[移动端音乐 WebApp](http://120.79.162.149:3002)，或者可以扫描二维码访问：
-
-![](./doc/img/qr.png)
 
 - 推荐使用手机预览，电脑在 Chrome 调试模式下食用效果更佳，开启调试模式的手机模式后，如果不能滚动，刷新一下页面即可
 
@@ -109,10 +106,6 @@
 
 通过 `localstorage` 存储喜欢歌曲、播放历史数据。
 
-#### audio 标签在移动端不能够自动播放的问题
-
-电脑端是没有这个问题的，这个问题真的是让我很头大，最后是用了很鬼畜的方法解决了（使用 `addEventListener` 监听 touchend 事件，然后在回调函数中让 audio 播放一次，具体看 App.vue 文件，注释有写）。
-
 ### 播放列表
 
 显示和管理当前播放歌曲，可以用来删除列表中的歌曲、以及选择播放歌曲。
@@ -138,15 +131,6 @@
 3. 增加歌曲评论
 4. 增加 MV、电台 功能
 5. emm，更多功能容我再想想哈
-
-## 感谢
-
-- 感谢 [Binaryify](https://github.com/Binaryify) 对接口文档 [NeteaseCloudMusicApi](https://binaryify.github.io/NeteaseCloudMusicApi/#/?id=neteasecloudmusicapi) 的不断维护与更新。
-- 感谢 [ustbhuangyi](https://github.com/ustbhuangyi) 老师的 [Vue 实战教程](http://coding.imooc.com/class/107.html) ，让我学习到很多 vue 的知识。
-
-## 最后
-
-如果觉得我的项目还不错的话 :clap:，就给个 star :star: 鼓励一下吧~
 
 ## Build Setup
 克隆代码到本地之后，需要运行 [NeteaseCloudMusicApi](https://binaryify.github.io/NeteaseCloudMusicApi/#/?id=neteasecloudmusicapi)，来起一个音乐的 API 接口。
