@@ -209,7 +209,7 @@ export default {
       font-size: $font-size-small;
       font-weight: bold;
       &.current {
-        color: $color-theme;
+        color: $color-sub-theme;
       }
     }
   }

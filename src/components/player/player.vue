@@ -8,7 +8,7 @@
                 </div>
                 <div class="top">
                     <div class="back" @click="back">
-                        <i class="fa fa-angle-down"></i>
+                        <i class="fa fa-arrow-left"></i>
                     </div>
                     <h1 class="title">{{currentSong.name}}</h1>
                     <h2 class="subTitle">{{currentSong.singer}}</h2>
@@ -35,18 +35,18 @@
                                         {{line.txt}}
                                     </p>
                                 </div>
-                                <p class="no-lyric" v-if="currentLyric === null">没有歌词</p>
+                                <p class="no-lyric" v-if="currentLyric === null">纯音乐，请欣赏</p>
                             </div>
                         </scroll>
                     </transition>
                 </div>
                 <div class="bottom">
                     <div class="progress-wrapper">
-                        <span class="time time-l">0:00</span>
+                        <span class="time time-l">{{format(currentTime)}}</span>
                         <div class="progress-bar-wrapper">
                             <progress-bar :percent="percent" @percentChange="percentChange" @percentChangeEnd="percentChangeEnd"></progress-bar>
                         </div>
-                        <span class="time time-r">5:00</span>
+                        <span class="time time-r">{{format(duration)}}</span>
                     </div>
                     <div class="operators">
                         <div class="icon i-left" >
@@ -56,7 +56,7 @@
                         <i class="iconfont icon-prev" @click="prev"></i>
                         </div>
                         <div class="icon i-center" >
-                        <i class="iconfont" @click="togglePlaying" :class="playIcon"></i>
+                        <i class="fa" @click="togglePlaying" :class="playIcon"></i>
                         </div>
                         <div class="icon i-right" >
                         <i class="iconfont icon-test" @click="next"></i>
@@ -68,7 +68,25 @@
                 </div>
             </div>
         </transition>
-
+        <transition name="mini">
+            <div class="mini-player" v-show="!fullScreen">
+                <div class="icon" @click.stop="getFullScreen">
+                    <img :class="cdCls" :src="currentSong.image" width="40" height="40" />
+                </div>
+                <div class="text">
+                    <h2 class="name" v-html="currentSong.name"></h2>
+                    <div class="desc" v-html="currentSong.singer"></div>
+                </div>
+                <div class="control" @click.stop="togglePlaying">
+                    <progress-circle :radius="radius" :percent="percent">
+                        <i class="fa" :class="miniIcon"></i>
+                    </progress-circle>
+                </div>
+                <div class="control">
+                    <i class="iconfont icon-caidan1"></i>
+                </div>
+            </div>
+        </transition>
 
         <audio id="music-audio" ref="audio" @canplay="ready"  @ended="end" autoplay @timeupdate="updateTime"></audio>
     </div>
@@ -95,7 +113,8 @@ export default {
             currentLineNum: 0,
             duration: 0,
             percent: 0,
-            currentTime: 0
+            currentTime: 0,
+            radius: 32
         }
     },
     computed: {
@@ -108,14 +127,17 @@ export default {
                 return 'icon-random'
             }
         },
+        miniIcon () {
+            return this.playing ? 'fa-pause' : 'fa-play'
+        },
         cdCls () {
-            return this.playing? 'play' : 'pause'
+            return this.playing? 'play' : 'play pause'
         },
         metalBar () {
             return '../../common/image/bar.jpg'
         },
         playIcon () {
-            return this.playing ? 'icon-stop' : 'icon-bofangicon'
+            return this.playing ? 'fa-pause-circle-o' : 'fa-play-circle-o'
         },
         ...mapGetters([
             'playlist',
@@ -177,7 +199,9 @@ export default {
             getLyric(id).then((res) => {
                 if (res.status === ERR_OK) {
                     console.log(res.data)
-                    this.currentLyric = new Lyric(res.data.lrc.lyric, this.handleLyric)
+                    if (!res.data.nolyric) {
+                        this.currentLyric = new Lyric(res.data.lrc.lyric, this.handleLyric)
+                    }
                 }
             })
         },
@@ -202,6 +226,9 @@ export default {
         format (interval) {
             interval = interval | 0
             let minute = interval / 60 | 0
+            if (minute < 10) {
+                minute = '0' + minute
+            }
             let second = interval % 60
             if (second < 10) {
                 second = '0' + second
@@ -328,6 +355,9 @@ export default {
                 this.currentLyric.togglePlay()
             }
         },
+        getFullScreen () {
+            this.setFullScreen(true)
+        },
         ...mapMutations({
             setFullScreen: 'SET_FULL_SCREEN',
             setPlayingState: 'SET_PLAYING_STATE',
@@ -343,7 +373,8 @@ export default {
     },
     components: {
         Scroll,
-        ProgressBar
+        ProgressBar,
+        ProgressCircle
     }
 
 }
@@ -366,17 +397,16 @@ export default {
             position: absolute;
             left: -50%;
             top: -50%;
-            width: 300%;
-            height: 300%;
+            width: 250%;
+            height: 200%;
             z-index: -1;
-            opacity: 0.6;
-            filter: blur(30px);
+            filter: blur(60px);
             .filter {
                 position: absolute;
                 width: 100%;
                 height: 100%;
-                opacity: 0.6;
-                background: black;
+                opacity: 0.43;
+                background: rgb(46, 41, 41);
                 &.filterR-enter-active, &.filter-leave-active {
                     transition: all 0.3s
                 }
@@ -398,12 +428,11 @@ export default {
                 top: 6px;
                 left: 6px;
                 z-index: 50;
-                .fa-angle-down {
+                .fa-arrow-left {
                     display: block;
                     padding: 5px 9px;
-                    font-size: 25px;
+                    font-size: 20px;
                     color: $color-text-l;
-                    font-weight: bold;
                 }
             }
             .title {
@@ -411,18 +440,18 @@ export default {
                 margin: 0 auto;
                 padding-top: 10px;
                 line-height: 20px;
-                text-align: center;
+                text-align: left;
                 @include no-wrap();
-                font-size: $font-size-medium-x;
+                font-size: $font-size-large-s;
+                font-weight: 400;
                 color: $color-text-l;
-                letter-spacing: 1px;
             }
             .subTitle {
                 @extend .title;
                 font-size: $font-size-small-x;
                 font-weight: normal;
                 padding-top: 0;
-                opacity: 0.5;
+                opacity: 0.6;
                 letter-spacing: 1px;
             }
         }
@@ -513,10 +542,16 @@ export default {
                     .text {
                         line-height: 40px;
                         color: $color-text-gg;
-                        font-size: $font-size-medium;
+                        font-size: $font-size-medium-x;
                         &.current {
                             color: #fff;
                         }
+                    }
+                    .no-lyric {
+                        line-height: 40px;
+                        color: $color-text-ggg;
+                        margin-top: 160px;
+                        font-size: $font-size-large-s;
                     }
                 }
             }
@@ -585,10 +620,87 @@ export default {
             }
         }
     }
+    .mini-player {
+        display: flex;
+        align-items: center;
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        z-index: 100;
+        width: 100%;
+        height: 60px;
+        background: #fff;
+        &.mini-enter-active, &mini-leave-active {
+            transition: all 0.3s;
+        }
+        &.mini-enter, &.mini-leave-to {
+            opacity: 0;
+        }
+        .icon {
+            flex: 0 0 40px;
+            width: 40px;
+            padding: 0 10px 0 20px;
+            img {
+                border-radius: 50%;
+                &.play {
+                    animation: rotate 10s linear infinite;
+                }
+                &.pause {
+                    animation-play-state: paused;
+                }
+            }
+        }
+        .text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex: 1;
+            overflow: hidden;
+            .name {
+                margin-bottom: 2px;
+                line-height: 14px;
+                @include no-wrap();
+                font-size: $font-size-medium;
+                color: $color-text;
+            }
+            .desc {
+                font-size: $font-size-small;
+                color: $color-text;
+            }
+        }
+        .control {
+            flex: 0 0 30px;
+            width: 30px;
+            padding: 0 10px;
+            .icon-play-mini, icon-pause-mini, .icon-playlist, .iconfont {
+                font-size: 30px;
+                color: $color-theme-d;
+            }
+            .iconfont {
+                position: relative;
+                left: -5px;
+                top: -5px;
+            }
+            .fa-play {
+                color: $color-theme-d;
+                font-size: 14px;
+                position: absolute;
+                left: 12px;
+                top: 8.5px;
+            }
+            .fa-pause {
+                color: $color-theme-d;
+                font-size: 12px;
+                position: absolute;
+                left: 11px;
+                top: 10px;
+            }
+        }
+    }
 }
 @keyframes rotate {
     0% {
-        transform: rotate(0);
+        transform: rotate(0deg);
     }
     100% {
         transform: rotate(360deg);

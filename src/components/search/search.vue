@@ -23,7 +23,7 @@
                         </div>
                     </div>
                     <div class="search-result">
-                        <suggest @refresh="refresh" :query="query" ref="suggest"></suggest>
+                        <suggest @select="saveSearch" @refresh="refresh" :query="query" ref="suggest"></suggest>
                     </div>
                 </div>
             </scroll>
@@ -80,6 +80,9 @@ export default {
         },
         addQuery (query) {
             this.$refs.searchBox.setQuery(query)
+        },
+        saveSearch () {
+            this.saveSearchHistory(this.query)
         },
         ...mapActions([
             'saveSearchHistory',

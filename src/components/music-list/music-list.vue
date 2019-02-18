@@ -29,7 +29,7 @@
                     </div>
                     <div class="song-list-wrapper">
                         <div class="sequence-play" v-show="listDetail.length">
-                            <i class="iconfont icon-bofangicon"></i>
+                            <i class="iconfont icon-bofangicon" @click="sequence"></i>
                             <span class="text">播放全部</span>
                             <span class="count">(共{{listDetail.length}}首)</span>
                         </div>
@@ -110,8 +110,14 @@ export default {
                 index: index
             })
            // console.log(this.playlist)
-            console.log(this.currentSong)
+            //console.log(this.currentSong)
             //console.log(this.fullScreen)
+        },
+        sequence () {
+            let list = this.listDetail
+            this.sequencePlay({
+                list: list
+            })
         },
         _getRecommendListDetail (id) {
             if (!id) {
@@ -124,14 +130,15 @@ export default {
                     this.listDetail = res.data.playlist.tracks.map((item) => {
                         return createRecommendListSong(item)
                     })
-                    // console.log(this.listDetail)
+                    //console.log(this.listDetail)
                 } else {
                     console.error('getRecommendlistDetail 失败')
                 }
             })
         },
         ...mapActions([
-            'selectPlay'
+            'selectPlay',
+            'sequencePlay'
         ])
     },
     watch: {

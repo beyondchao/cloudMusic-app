@@ -58,7 +58,7 @@ export default {
         }
     },
     created () {
-        console.log(this.singer)
+        //console.log(this.singer)
         this.probeType = 3
         this.listenScroll = true
         if (!this.singer.id) {
@@ -132,6 +132,7 @@ export default {
     watch: {
         node (val) {
             this.listDetail = this._normallizeSongs(val)
+            //console.log(this.listDetail)
         },
         scrollY (newY) {
             let percent = Math.abs(newY / this.imageHeight)
@@ -145,7 +146,7 @@ export default {
             }
             if (newY < 0) {
                 this.$refs.headerFilter.style.backgroundImage = `url(${this.singer.avatar})`
-                this.$refs.headerFilter.style.filter = `opacity(${percent})  blur(10px)`
+                this.$refs.headerFilter.style.filter = `opacity(${percent})  blur(30px)`
             } else {
                 this.$refs.header.style.background = 'rgba(212, 68, 57, 0)'
             }
@@ -181,8 +182,6 @@ export default {
         z-index: 100;
         height: 44px;
         overflow: hidden;
-        border-bottom: 1px solid transparent;
-        border-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 1;
         .headerFilter {
             position: absolute;
             width: 900%;
