@@ -126,7 +126,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "~common/scss/variable";
 @import "~common/scss/mixin";
 
@@ -142,11 +142,10 @@ export default {
         overflow: hidden;
         .decorate {
             position: absolute;
-            top: -30vh;
-            z-index: -10;
+            top: 0vh;
             background-color: $color-theme;
             width: 100%;
-            height: 50vh;
+            height: 20vh;
             vertical-align: inherit;
         }
         .slider-wraper {

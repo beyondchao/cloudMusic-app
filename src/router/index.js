@@ -48,6 +48,13 @@ export default new Router({
     {
       path: '/user',
       component: User
+    },
+    {
+      path: '/search',
+      component: Search,
+      children: [
+        
+      ]
     }
   ]
 })
