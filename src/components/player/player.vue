@@ -211,7 +211,9 @@ export default {
                 let lineEl = this.$refs.lyricLine[lineNum - 5]
                 this.$refs.lyricList.scrollToElement(lineEl, 1000)
             } else {
-                this.$refs.lyricList.scrollTo(0, 0, 1000)
+                if (this.$refs.lyricList) {
+                    this.$refs.lyricList.scrollTo(0, 0, 1000)
+                }
             }
 
         },
